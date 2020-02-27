@@ -1,0 +1,66 @@
+---
+title: "Notes"
+author: "Alan Jackson"
+date: "2/24/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Services to access
+
+## Google
+
+## Census Bureau
+
+## Mapquest
+
+https://developer.mapquest.com/documentation/open/geocoding-api/
+
+## LocationIQ
+
+https://locationiq.com/
+
+## Open Cage (Nominatum, Two Fishes, Data Science Toolkit)
+
+https://opencagedata.com/
+ 1 request per second
+ 2500 requests per day
+ use opencage package here?
+
+## Here
+
+https://developer.here.com
+
+
+# Options to support
+
+## count queries against limits
+
+## store api keys securely so GIT won't see them
+
+## filter and compare results
+
+- compare results from different services
+
+# structure of a query
+
+## Rate limits - will be set to minimum for each service
+
+## Multiple queries - hand over a tibble
+
+## Build the query
+
+- convert address range to a semi-random address from 1-50
+- 
+
+## Selecting "correct" answer.
+
+- Look at distances between answers, if small combine
+- Look at completeness of answer, most complete wins
+- Use returned ranking or error estimate to help decide
+- Option to return best or many answers
+
+
