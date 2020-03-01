@@ -14,3 +14,6 @@ BugReports: https://github.com/alankjackson/ggeocode/issues
 Imports:
     dplyr (>= 0.8.3),
     opencage
+Suggests: 
+    testthat
+RoxygenNote: 7.0.2
