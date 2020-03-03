@@ -6,7 +6,7 @@
 \usage{
 opencage(
   placename,
-  key = opencage::opencage_key(),
+  keyfile = keyfile,
   bounds = NULL,
   countrycode = NULL,
   language = NULL,
@@ -22,7 +22,7 @@ opencage(
 \arguments{
 \item{placename}{Placename.}
 
-\item{key}{Your OpenCage key.}
+\item{keyfile}{File (full path) to read key from.}
 
 \item{bounds}{Provides the geocoder with a hint to the region that the query resides in. This value will restrict the possible results to the supplied region. The bounds parameter should be specified as 4 coordinate points forming the south-west and north-east corners of a bounding box. For example, \code{bounds = c(-0.563160, 51.280430, 0.278970, 51.683979)} (min long, min lat, max long, max lat).}
 

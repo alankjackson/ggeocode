@@ -2,17 +2,17 @@
 % Please edit documentation in R/utilities.R
 \name{set_keyfile}
 \alias{set_keyfile}
-\title{Set a path and filename for authorization tokens.}
+\title{Set filename for authorization tokens.}
 \usage{
-set_keyfile(path, filename)
+set_keyfile(filename, service)
 }
 \arguments{
-\item{path}{Path to your file's directory.}
+\item{filename}{Name of file storing keys.}
 
-\item{filename}{Name of file storing keys}
+\item{service}{Name of service key to return (google, opencage, etc).}
 }
 \description{
-Set a path and filename for authorization tokens.
+Set filename for authorization tokens.
 }
 \details{
 The authorization file should be of the form:
