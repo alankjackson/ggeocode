@@ -34,6 +34,9 @@ https://opencagedata.com/
 
 https://developer.here.com
 
+250K queries per month
+https://discover.search.hereapi.com/v1/geocode?apikey=key&q=1311+Tulane+St%2C+77008
+parcel-centered locations
 
 # Options to support
 
