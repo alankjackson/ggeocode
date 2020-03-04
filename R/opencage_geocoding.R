@@ -4,7 +4,7 @@
 #' function.
 #'
 #' @param placename Placename.
-#' @param keyfile File (full path) to read key from.
+#' @param keyfile File (full path) to read api key from.
 #' @param bounds Provides the geocoder with a hint to the region that the query resides in. This value will restrict the possible results to the supplied region. The bounds parameter should be specified as 4 coordinate points forming the south-west and north-east corners of a bounding box. For example, \code{bounds = c(-0.563160, 51.280430, 0.278970, 51.683979)} (min long, min lat, max long, max lat).
 #' @param countrycode Restricts the results to the given country. The country code is a two letter code as defined by the ISO 3166-1 Alpha 2 standard. E.g. "GB" for the United Kingdom, "FR" for France, "US" for United States.
 #' @param language An IETF format language code (such as "es" for Spanish or "pt-BR" for Brazilian Portuguese). If no language is explicitly specified, we will look for an HTTP Accept-Language header like those sent by a browser and use the first language specified and if none are specified "en" (English) will be assumed.
@@ -32,11 +32,12 @@ opencage <- function(placename, keyfile=keyfile,
                       no_annotations = FALSE,
                       no_dedupe = FALSE,
                       no_record = FALSE,
-                      abbrv = FALSE,
+                      abbrv = TRUE,
                       add_request = TRUE){
   opencage_key <- set_keyfile(keyfile, "opencage")
   #print(paste("Key: ",opencage_key))
-  opencage::opencage_forward(placename = placename,
+  options(stringsAsFactors=FALSE)
+  foo <- opencage::opencage_forward(placename = placename,
                              key=opencage_key,
                              bounds=bounds,
                              countrycode=countrycode,
@@ -48,4 +49,13 @@ opencage <- function(placename, keyfile=keyfile,
                              no_record=no_record,
                              abbrv=abbrv,
                              add_request=add_request)
+  return(tibble::tibble(
+         #foo[["total_results"]],
+         Address=foo[["results"]][["formatted"]],
+         Confidence=foo[["results"]][["confidence"]],
+         Zip=foo[["results"]][["components.postcode"]],
+         #Neighborhood=foo[["results"]][["components.neighbourhood"]],
+         Type=foo[["results"]][["components._category"]],
+         Lat=foo[["results"]][["geometry.lat"]],
+         Lng=foo[["results"]][["geometry.lng"]]))
 }
