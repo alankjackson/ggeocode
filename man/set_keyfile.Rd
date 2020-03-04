@@ -19,7 +19,7 @@ The authorization file should be of the form:
 
 service authorization_key
 
-Supported services are opencage and googlemaps.
+Supported services are opencage, here, and googlemaps.
 
 So a line like
 
