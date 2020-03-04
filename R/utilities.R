@@ -98,7 +98,7 @@ compare_addys <- function(address_1, address_2) {
     add_2 <- c(add_2[1:2],stringr::str_split(add_2[3], " ")[[1]] )
   }
   # Remove extra 4 digits from zip if present
-  if (length(add_2>3)) {
+  if (length(add_2)>3) {
     add_2[4] <- stringr::str_extract(add_2[4], "^\\d+")
   }
   #   What if one is shorter?
@@ -111,7 +111,7 @@ compare_addys <- function(address_1, address_2) {
   # State
   ret_vector[3] <- adist(add_1[3], add_2[3], counts = TRUE, ignore.case=TRUE)[[1]]
   # Zip
-  if (length(add_1)>3 & length(add_2)>3) {
+  if ((length(add_1)>3) & (length(add_2)>3)) {
     ret_vector[4] <- adist(add_1[4], add_2[4], counts = TRUE, ignore.case=TRUE)[[1]]
   }
   # Country
