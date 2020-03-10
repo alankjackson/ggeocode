@@ -16,14 +16,13 @@
 #' @param abbrv Logical (default FALSE), when TRUE addresses are abbreviated (e.g. C. instead of Calle)
 #' @param add_request Logical (default TRUE), when FALSE the query text is removed from the results data frame.
 #'
-#' @details To get an API key to access OpenCage geocoding, register at \url{https://geocoder.opencagedata.com/pricing}. The free API key provides up to 2,500 calls a day. For ease of use, save your API key as an environment variable as described at \url{https://stat545-ubc.github.io/bit003_api-key-env-var.html}.
-#' Both functions of the package will conveniently look for your API key using \code{Sys.getenv("OPENCAGE_KEY")} so if your API key is an environment variable called "OPENCAGE_KEY" you don't need to input it manually.
+#' @details To get an API key to access OpenCage geocoding, register at \url{https://geocoder.opencagedata.com/pricing}. The free API key provides up to 2,500 calls a day.
 #' The underlying data at OpenCage is updated about once a day. Note that the package uses `memoise` with no timeout argument so that results are cached inside an active R session.
 #'
 #' This function typically returns multiple results because of placename ambiguity; consider using the \code{bounds} parameter to limit the area searched.
 #'
 
-opencage <- function(placename, keyfile=keyfile,
+opencage <- function(placename, keyfile=NULL,
                       bounds = NULL,
                       countrycode = NULL,
                       language = NULL,
