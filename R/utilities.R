@@ -10,11 +10,11 @@
 #'
 #' service authorization_key
 #'
-#' Supported services are opencage, here, and googlemaps.
+#' Supported services are opencage, here, and google.
 #'
 #' So a line like
 #'
-#' googlemaps IOUYGUBKJKBKNOlknlnlnlknLnkl
+#' google IOUYGUBKJKBKNOlknlnlnlknLnkl
 #'
 #' is what is required.
 #'
@@ -45,7 +45,7 @@ set_keyfile <- function(filename, service) {
       svsc <- stringr::str_split(keys[i,], "\\s+")[[1]][1]
       key <- stringr::str_split(keys[i,], "\\s+")[[1]][2]
         if (svsc == "opencage")     {opencage_key <- key}
-        if (svsc == "googlemaps")   {google_key <- key}
+        if (svsc == "google")   {google_key <- key}
         if (svsc == "here_api_key") { here_api_key <- key}
     }
     #print(paste("opencage_key =", opencage_key))
@@ -122,4 +122,79 @@ compare_addys <- function(address_1, address_2) {
   return(ret_vector)
 
 }
+
+# --------------------------------------------------------------------
+#' Track usage to stay below limits
+#'
+#' @param service which service (opencage, google, here) to access.
+#' @param action one of "Post" or "Query". Post will save a record,
+#' Query will retrieve number of free queries left. If negative, then
+#' equals number of minutes until the quota is renewed.
+#'
+#' @details
+#' A log of queries is store in /tmp/.ggeocode_query_times.rds
+#'
+#'
+
+track_usage <- function(service,
+                        action=c("Post", "Query")) {
+  # store limits for various services
+  limits <- tibble::tribble(
+    ~service, ~duration, ~limit,
+    "opencage", "day", 2500,
+    "google", "month", 40000,
+    "here", "month", 250000
+  )
+  if (action=="Post") {
+    if (file.exists("/tmp/.ggeocode_query_times.rds")) {
+      ggeocode_query_times <- readRDS("/tmp/.ggeocode_query_times.rds")
+      ggeocode_query_times <-
+             dplyr::bind_rows(ggeocode_query_times,
+                       tibble::tibble("time" = lubridate::now(), "service" = service))
+    } else {
+      ggeocode_query_times <-
+             tibble::tibble("time" = lubridate::now(), "service" = service)
+    }
+    saveRDS(ggeocode_query_times, "/tmp/.ggeocode_query_times.rds")
+  }
+  if (action=="Query"){
+      ggeocode_query_times <- readRDS("/tmp/.ggeocode_query_times.rds")
+
+      duration <- limits[grep(service, limits$service),][2][[1]]
+      limit <- limits[grep(service, limits$service),][3][[1]]
+
+      if (duration == "day") {
+        num_query <- ggeocode_query_times %>%
+          dplyr::filter(service==service) %>%
+          dplyr::filter(lubridate::day(.$time)==lubridate::day(lubridate::now())) %>%
+          nrow()
+        till_reset <- 24*60 - (lubridate::minute(lubridate::now()) +
+                               60*lubridate::hour(lubridate::now()))
+      } else {
+        num_query <- ggeocode_query_times %>%
+          dplyr::filter(service==service) %>%
+          dplyr::filter(lubridate::month(.$time)==lubridate::month(lubridate::now())) %>%
+          nrow()
+        days_in_month <- as.integer(lubridate::days_in_month(lubridate::now()))
+        till_reset <- 24*60 - (lubridate::minute(lubridate::now()) +
+                               60*lubridate::hour(lubridate::now()))
+        till_reset <- till_reset + 24*60*(days_in_month -
+                                            lubridate::day(lubridate::now()))
+      }
+    remaining <- limit-num_query
+    if (remaining<1) {
+      return(-1*till_reset) # return number of minutes until reset
+    }
+    return(remaining) # return number of queries remaining
+  }
+
+      print(paste("times:", ggeocode_query_times ))
+      ggeocode_query_times
+
+}
+
+
+
+
+
 
