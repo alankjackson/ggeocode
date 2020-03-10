@@ -1,0 +1,5 @@
+- Add tests for NULL keyfile
+
+- Add capability to store number of queries to look for exceeding monthly limit
+
+
